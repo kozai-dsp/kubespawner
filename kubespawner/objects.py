@@ -465,7 +465,8 @@ def make_ingress(
         target,
         data,
         extra_ingress_annotations={},
-        tls_secret_name=None
+        tls_secret_name=None,
+        default_host=None
 ):
     """
     Returns an ingress, service, endpoint object that'll work for this service
@@ -495,7 +496,7 @@ def make_ingress(
     )
 
     if routespec.startswith('/'):
-        host = None
+        host = default_host
         path = routespec
     else:
         host, path = routespec.split('/', 1)

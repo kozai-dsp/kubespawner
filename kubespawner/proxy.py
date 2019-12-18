@@ -86,6 +86,14 @@ class KubeIngressProxy(Proxy):
         """
     )
 
+    default_host = Unicode(
+        config=True,
+        default_value=None,
+        help="""
+        If no host is specified in the routespec, then default to this value
+        """
+    )
+
     def _namespace_default(self):
         """
         Set namespace default to current namespace if running in a k8s cluster
@@ -148,7 +156,8 @@ class KubeIngressProxy(Proxy):
             target,
             data,
             extra_ingress_annotations=self.extra_ingress_annotations,
-            tls_secret_name=self.tls_secret_name
+            tls_secret_name=self.tls_secret_name,
+            default_host=self.default_host
         )
 
         @gen.coroutine
