@@ -70,11 +70,14 @@ class KubeIngressProxy(Proxy):
 
     tls_secret_name = Unicode(
         config=True,
+        allow_none=True,
         default_value=None,
         help="""
         The name of the tls_secret to use for this ingress host
         
         This should be the same as used by the jupyterhub ingress
+        
+        If none, then TLS is disabled
         """
     )
 
@@ -88,6 +91,7 @@ class KubeIngressProxy(Proxy):
 
     default_host = Unicode(
         config=True,
+        allow_none=True,
         default_value=None,
         help="""
         If no host is specified in the routespec, then default to this value
