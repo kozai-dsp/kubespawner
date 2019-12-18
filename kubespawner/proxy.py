@@ -12,7 +12,7 @@ from kubespawner.objects import make_ingress
 from kubespawner.utils import generate_hashed_slug
 from kubespawner.reflector import NamespacedResourceReflector
 from .clients import shared_client
-from traitlets import Unicode
+from traitlets import Unicode, Dict
 from tornado import gen
 from tornado.concurrent import run_on_executor
 
@@ -65,6 +65,24 @@ class KubeIngressProxy(Proxy):
 
         If running inside a kubernetes cluster with service accounts enabled,
         defaults to the current namespace. If not, defaults to 'default'
+        """
+    )
+
+    tls_secret_name = Unicode(
+        config=True,
+        default_value=None,
+        help="""
+        The name of the tls_secret to use for this ingress host
+        
+        This should be the same as used by the jupyterhub ingress
+        """
+    )
+
+    extra_ingress_annotations = Dict(
+        config=True,
+        default_value={},
+        help="""
+        Additional annotations for ingress
         """
     )
 
@@ -128,7 +146,9 @@ class KubeIngressProxy(Proxy):
             safe_name,
             routespec,
             target,
-            data
+            data,
+            extra_ingress_annotations=self.extra_ingress_annotations,
+            tls_secret_name=self.tls_secret_name
         )
 
         @gen.coroutine
