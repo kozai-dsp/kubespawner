@@ -152,6 +152,8 @@ class KubeIngressProxy(Proxy):
         # Use full routespec in label
         # 'data' is JSON encoded and put in an annotation - we don't need to query for it
         safe_name = self.safe_name_for_routespec(routespec).lower()
+
+        self.log.info('Creating ingress with extra_ingress_annotations=%s, tls_secret_name=%s, default_host=%s', self.extra_ingress_annotations, self.tls_secret_name, self.default_host)
         endpoint, service, ingress = make_ingress(
             safe_name,
             routespec,
